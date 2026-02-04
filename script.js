@@ -1,14 +1,51 @@
 // script.js
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 //Variables
 /********************************************/
 
 
 
 /********************************************/
-document.addEventListener("DOMContentLoaded", function() {
-document.getElementById("welcomeMessage").innerHTML = "You've connected to the JavaScript!";
+
+//Firebase Imports
+/********************************************/
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+
+
+/********************************************/
+//Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyA8viBZ-gKBknRREyTiDinnugjj6Rjrog0",
+  authDomain: "comp-2025-dylan-f.firebaseapp.com",
+  databaseURL: "https://comp-2025-dylan-f-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "comp-2025-dylan-f",
+  storageBucket: "comp-2025-dylan-f.firebasestorage.app",
+  messagingSenderId: "133223974410",
+  appId: "1:133223974410:web:d1cde3ac980749bde601f3",
+  measurementId: "G-WHVZ7GW4CF"
+};
+/********************************************/
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("welcomeMessage").innerHTML =
+    "You've connected to the JavaScript!";
+
+  const app = initializeApp(firebaseConfig);
+console.log(
+  "%c🔥🔥 FIREBASE ONLINE 🔥🔥",
+  `
+  color: #ff2b2b;
+  font-size: 26px;
+  font-weight: 900;
+  background: black;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #ff2b2b;
+  `
+);
+
 });
+
 
 function headingButton(){
     document.getElementById("welcomeMessage").innerHTML = input;
@@ -18,18 +55,4 @@ function headingButton(){
 function textInput(){
     var input = document.getElementById("textInput").value;
     document.getElementById("welcomeMessage").innerHTML = input;
-}
-
-function fb_setup() {
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAg8lvqwt8ZU6G2tJwiyKOii7pgwO3jG2g",
-  authDomain: "comp-refresh.firebaseapp.com",
-  databaseURL: "https://comp-refresh-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "comp-refresh",
-  storageBucket: "comp-refresh.firebasestorage.app",
-  messagingSenderId: "318121706998",
-  appId: "1:318121706998:web:d5dca22b08182788c773d7",
-  measurementId: "G-KEV1CCZJ41"
-};
 }

@@ -10,6 +10,7 @@
 //Firebase Imports
 /********************************************/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 
 /********************************************/
@@ -56,3 +57,34 @@ function textInput(){
     var input = document.getElementById("textInput").value;
     document.getElementById("welcomeMessage").innerHTML = input;
 }
+
+/******************************************************/
+// fb_login()
+// Called by index.html on page load
+// Log in to Firebase app
+// Input: n/a
+// Return: n/a
+/******************************************************/
+function fb_login() {
+  const AUTH = getAuth();
+  const PROVIDER = new GoogleAuthProvider();
+  PROVIDER.setCustomParameters({
+    prompt: 'select_account'
+  });
+  signInWithPopup(AUTH, PROVIDER)
+    .then((result) => {
+      const user = result.user;
+      if (user) {
+        console.log("User Signed In", user);
+        document.getElementById('p_fbLogin').innerText = user.displayName || "Unknown User";
+      } else {
+        console.warn("No user returned after sign-in.");
+        document.getElementById('p_fbLogin').innerText = "Login worked with no data available";
+      }
+    })
+    .catch((error) => {
+      console.error("Login error:", error);
+      document.getElementById('p_fbLogin').innerText = "The Login has failed";
+    });
+}
+

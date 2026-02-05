@@ -11,7 +11,7 @@
 /********************************************/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 /********************************************/
 //Firebase Config
@@ -32,6 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "You've connected to the JavaScript!";
 
   const app = initializeApp(firebaseConfig);
+  const gamedb = getDatabase(app);
+  console.info(gamedb);
   console.log(
     "%c🔥🔥 FIREBASE ONLINE 🔥🔥",
     `

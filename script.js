@@ -32,9 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
     "You've connected to the JavaScript!";
 
   const app = initializeApp(firebaseConfig);
-console.log(
-  "%c🔥🔥 FIREBASE ONLINE 🔥🔥",
-  `
+  console.log(
+    "%c🔥🔥 FIREBASE ONLINE 🔥🔥",
+    `
   color: #ff2b2b;
   font-size: 26px;
   font-weight: 900;
@@ -43,20 +43,16 @@ console.log(
   border-radius: 8px;
   box-shadow: 0 0 15px #ff2b2b;
   `
-);
+  );
 
+
+  const textButton = document.getElementById("textInputBtn");
+  textButton.addEventListener("click", () => {
+    const input = document.getElementById("textInput").value;
+    document.getElementById("welcomeMessage").innerHTML = input;
+  });
 });
 
-
-function headingButton(){
-    document.getElementById("welcomeMessage").innerHTML = input;
-}
-
-
-function textInput(){
-    var input = document.getElementById("textInput").value;
-    document.getElementById("welcomeMessage").innerHTML = input;
-}
 
 /******************************************************/
 // fb_login()
@@ -65,7 +61,8 @@ function textInput(){
 // Input: n/a
 // Return: n/a
 /******************************************************/
-function fb_login() {
+window.fb_login = function() {
+  console.log("Login button clicked");
   const AUTH = getAuth();
   const PROVIDER = new GoogleAuthProvider();
   PROVIDER.setCustomParameters({
@@ -87,4 +84,7 @@ function fb_login() {
       document.getElementById('p_fbLogin').innerText = "The Login has failed";
     });
 }
+
+
+
 

@@ -3,7 +3,8 @@
 //Variables
 /********************************************/
 
-
+let gamedb; //Global variable 
+let user;
 
 /********************************************/
 
@@ -11,7 +12,7 @@
 /********************************************/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 /********************************************/
 //Firebase Config
@@ -26,14 +27,17 @@ const firebaseConfig = {
   measurementId: "G-KEV1CCZJ41"
 };
 /********************************************/
+//Initialize 
+/******************************************************/
+document.addEventListener("DOMContentLoaded", initialize);
 
-document.addEventListener("DOMContentLoaded", () => {
+function initialize() {
   document.getElementById("welcomeMessage").innerHTML =
     "You've connected to the JavaScript!";
-
   const app = initializeApp(firebaseConfig);
-  const gamedb = getDatabase(app);
+  gamedb = getDatabase(app);
   console.info(gamedb);
+  setupEventListeners();
   console.log(
     "%c🔥🔥 FIREBASE ONLINE 🔥🔥",
     `
@@ -46,14 +50,24 @@ document.addEventListener("DOMContentLoaded", () => {
   box-shadow: 0 0 15px #ff2b2b;
   `
   );
-
-
+}
+/******************************************************/
+//Text Button Funcs
+function setupEventListeners() {
   const textButton = document.getElementById("textInputBtn");
-  textButton.addEventListener("click", () => {
-    const input = document.getElementById("textInput").value;
-    document.getElementById("welcomeMessage").innerHTML = input;
-  });
-});
+
+  textButton.addEventListener("click", handleWriteClick);
+  
+  const readButton = document.getElementById("readBtn");
+  readButton.addEventListener("click", readFB);
+}
+
+function handleWriteClick() {
+  const input = document.getElementById("textInput").value;
+  console.log("Typed: " + input);
+  writeFB(input);
+}
+
 
 
 /******************************************************/
@@ -63,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Input: n/a
 // Return: n/a
 /******************************************************/
-window.fb_login = function() {
+window.fb_login = function () {
   console.log("Login button clicked");
   const AUTH = getAuth();
   const PROVIDER = new GoogleAuthProvider();
@@ -72,7 +86,7 @@ window.fb_login = function() {
   });
   signInWithPopup(AUTH, PROVIDER)
     .then((result) => {
-      const user = result.user;
+       user = result.user;
       if (user) {
         console.log("User Signed In", user);
         document.getElementById('p_fbLogin').innerText = user.displayName || "Unknown User";
@@ -88,5 +102,63 @@ window.fb_login = function() {
 }
 
 
+/******************************************************/
+// writeFB()
+// Called by index.html on page load
+// Write a record to the realtime database
+// Input: n/a
+// Return: n/a
+/******************************************************/
+function writeFB(textInput) {
+  console.log("Write to Firebase button clicked");
+  const recordPath = "userWrite/";
+  const data = {
+    text: textInput,
+  };
+  const DATAREF = ref(gamedb, recordPath);
 
 
+
+  set(DATAREF, data)
+    .then(() => {
+      console.log("Data Successfully written");
+      document.getElementById("p_fbWriteRec").innerText = "You wrote: " + JSON.stringify(data);
+
+    })
+    .catch((error) => {
+      console.error("Error writing data:", error);
+      document.getElementById("p_fbWriteRec").innerText = "Couldn't Write : " + JSON.stringify(data);
+
+    });
+
+}
+
+/******************************************************/
+// readFB
+// Called by index.html on page load
+// Write a record to the realtime database
+// Input: n/a
+// Return: n/a
+/******************************************************/
+
+
+function readFB() {
+    const READPATH = "userWrite/text";
+  const DATAREF = ref(gamedb, READPATH);
+
+  get(DATAREF).then((snapshot) => {
+    const fb_data = snapshot.val();
+
+    if (fb_data != null) {
+      console.log("Data successfully read:", fb_data);
+      document.getElementById("p_fbReadRec").innerText = "Read: " + fb_data;
+    } else {
+      console.warn("No data found at", READPATH);
+      document.getElementById("p_fbReadRec").innerText = "No data at " + READPATH;
+    }
+  }).catch((error) => {
+    console.error("Error reading data:", error);
+    document.getElementById("p_fbReadRec").innerText = "Failed to read from " + READPATH;
+  });
+
+}

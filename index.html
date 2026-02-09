@@ -12,12 +12,15 @@
     <h1 id="welcomeMessage">You haven't connected the JavaScript yet</h1>
     <h1> Dylan Test</h1>
     <input type="text" id="textInput" placeholder="Enter your text here">
-    <button id="textInputBtn">Update Heading</button>
-    <button onclick="fb_setup()">Setup Firebase</button>
+    <button id="textInputBtn">Write to Firebase!</button>
     <button onclick="fb_login()">Login with Google</button>
     <p id="p_fbLogin">Username will show up when logged in</p>
+    <p id="p_fbWriteRec">Your written records will show up here</p>
+    <button id="readBtn">Read Last Message</button>
+    <p id="p_fbReadRec">Last message will appear here</p>
 
-    <div class="dropdown">
+    <details>
+        <summary>Your tasks (click to expand)</summary>
         <p>Your tasks:
         <h2>JavaScript</h2>
         <ul>
@@ -53,7 +56,7 @@
                 href="https://sites.google.com/hvhs.school.nz/technology/COMP/12COMP/12-databases/br-firebase-skills">last
                 year's notes</a>, works for you.<br>
             By the end of the week you will have Firebase going.</p>
-    </div>
+    </details>
 </body>
 <script type="module" src="script.js"></script>
 

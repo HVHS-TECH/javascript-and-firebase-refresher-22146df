@@ -16,14 +16,14 @@ import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/
 /********************************************/
 //Firebase Config
 const firebaseConfig = {
-  apiKey: "AIzaSyA8viBZ-gKBknRREyTiDinnugjj6Rjrog0",
-  authDomain: "comp-2025-dylan-f.firebaseapp.com",
-  databaseURL: "https://comp-2025-dylan-f-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "comp-2025-dylan-f",
-  storageBucket: "comp-2025-dylan-f.firebasestorage.app",
-  messagingSenderId: "133223974410",
-  appId: "1:133223974410:web:d1cde3ac980749bde601f3",
-  measurementId: "G-WHVZ7GW4CF"
+  apiKey: "AIzaSyAg8lvqwt8ZU6G2tJwiyKOii7pgwO3jG2g",
+  authDomain: "comp-refresh.firebaseapp.com",
+  databaseURL: "https://comp-refresh-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "comp-refresh",
+  storageBucket: "comp-refresh.firebasestorage.app",
+  messagingSenderId: "318121706998",
+  appId: "1:318121706998:web:d5dca22b08182788c773d7",
+  measurementId: "G-KEV1CCZJ41"
 };
 /********************************************/
 

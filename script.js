@@ -148,6 +148,8 @@ function readFB() {
 
   get(DATAREF).then((snapshot) => {
     const fb_data = snapshot.val();
+    document.getElementById("welcomeMessage").innerHTML =
+    fb_data;
 
     if (fb_data != null) {
       console.log("Data successfully read:", fb_data);

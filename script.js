@@ -72,6 +72,8 @@ function setupEventListeners() {
 
   const readButton = document.getElementById("readBtn");
   readButton.addEventListener("click", readFB);
+  const peepBtn = document.getElementById("readAllBtn");
+  peepBtn.addEventListener("click", readPeeps);
 }
 
 function handleWriteClick() {
@@ -132,7 +134,7 @@ function writeFB(textInput) {
   }
   const recordPath = "userWrite/" + user.displayName + "/text";
   const data = {
-    Title: textInput,
+    title: textInput,
   };
   const DATAREF = ref(gamedb, recordPath);
 
@@ -163,26 +165,55 @@ function writeFB(textInput) {
 
 
 function readFB() {
-  const READPATH = "userWrite/" + user.displayName;
+  const READPATH = "userWrite/" + user.displayName + "/text";
   const DATAREF = ref(gamedb, READPATH);
 
   get(DATAREF).then((snapshot) => {
-    const fb_data = snapshot.val();
-    console.log("fb_data is:", fb_data);
-    document.getElementById("welcomeMessage").innerHTML =
-      fb_data.text;
 
-    if (fb_data != null) {
-      let title = fb_data.text.title;
-      console.log("Data successfully read:", title);
-      document.getElementById("p_fbReadRec").innerText = "Read: " + title;
+    if (snapshot.exists()) {
+      const fb_data = snapshot.val();
+      console.log("fb_data is:", fb_data);
+
+      const title = fb_data.title;
+      document.getElementById("welcomeMessage").innerHTML = title;
+      document.getElementById("p_fbReadRec").innerText = "Set Title: " + title;
+
     } else {
       console.warn("No data found at", READPATH);
-      document.getElementById("p_fbReadRec").innerText = "No data at " + READPATH;
+      document.getElementById("p_fbReadRec").innerText = "No data found";
     }
+
   }).catch((error) => {
     console.error("Error reading data:", error);
-    document.getElementById("p_fbReadRec").innerText = "Failed to read from " + READPATH;
   });
+}
 
+/******************************************************/
+// readPeeps
+// Called by index.html on page load
+// Read all records from the realtime database
+// Input: n/a
+// Return: n/a
+/******************************************************/
+
+
+function readPeeps() {
+  const READPATH = "userWrite/";
+  const DATAREF = ref(gamedb, READPATH);
+
+  get(DATAREF).then((snapshot) => {
+
+    if (snapshot.exists()) {
+      const fb_data = snapshot.val();
+      console.log("Everyone Wrote", fb_data);
+      document.getElementById("p_fbreadAll").innerText = JSON.stringify(fb_data);
+
+    } else {
+      console.warn("No data found at", READPATH);
+      document.getElementById("p_fbreadAll").innerText = "No data found";
+    }
+
+  }).catch((error) => {
+    console.error("Error reading data:", error);
+  });
 }

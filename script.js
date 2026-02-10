@@ -11,7 +11,7 @@ let user;
 //Firebase Imports
 /********************************************/
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 /********************************************/
@@ -50,6 +50,18 @@ function initialize() {
   box-shadow: 0 0 15px #ff2b2b;
   `
   );
+  const AUTH = getAuth();
+
+  onAuthStateChanged(AUTH, (currentUser) => {
+    if (currentUser) {
+      user = currentUser;
+      document.getElementById('p_fbLogin').innerText = user.displayName || "Unknown User";
+      console.log("User still logged in:", user);
+    } else {
+      user = null;
+      console.log("No user logged in");
+    }
+  });
 }
 /******************************************************/
 //Text Button Funcs
@@ -57,7 +69,7 @@ function setupEventListeners() {
   const textButton = document.getElementById("textInputBtn");
 
   textButton.addEventListener("click", handleWriteClick);
-  
+
   const readButton = document.getElementById("readBtn");
   readButton.addEventListener("click", readFB);
 }
@@ -86,7 +98,7 @@ window.fb_login = function () {
   });
   signInWithPopup(AUTH, PROVIDER)
     .then((result) => {
-       user = result.user;
+      user = result.user;
       if (user) {
         console.log("User Signed In", user);
         document.getElementById('p_fbLogin').innerText = user.displayName || "Unknown User";
@@ -111,18 +123,26 @@ window.fb_login = function () {
 /******************************************************/
 function writeFB(textInput) {
   console.log("Write to Firebase button clicked");
-  const recordPath = "userWrite/";
+  const msg = document.getElementById("p_fbWriteRec");
+  if (!user) {
+    console.warn("No user is signed in. Please log in first.");
+    msg.innerText = "Please log in before writing.";
+    msg.style.color = "#ff4d4d";
+    return;
+  }
+  const recordPath = "userWrite/" + user.displayName + "/text";
   const data = {
-    text: textInput,
+    Title: textInput,
   };
   const DATAREF = ref(gamedb, recordPath);
 
-
+  msg.innerText = "Successfully Written: " + JSON.stringify(data);
+  msg.style.color = "#4CAF50";
 
   set(DATAREF, data)
     .then(() => {
       console.log("Data Successfully written");
-      document.getElementById("p_fbWriteRec").innerText = "You wrote: " + JSON.stringify(data);
+
 
     })
     .catch((error) => {
@@ -143,17 +163,19 @@ function writeFB(textInput) {
 
 
 function readFB() {
-    const READPATH = "userWrite/text";
+  const READPATH = "userWrite/" + user.displayName;
   const DATAREF = ref(gamedb, READPATH);
 
   get(DATAREF).then((snapshot) => {
     const fb_data = snapshot.val();
+    console.log("fb_data is:", fb_data);
     document.getElementById("welcomeMessage").innerHTML =
-    fb_data;
+      fb_data.text;
 
     if (fb_data != null) {
-      console.log("Data successfully read:", fb_data);
-      document.getElementById("p_fbReadRec").innerText = "Read: " + fb_data;
+      let title = fb_data.text.title;
+      console.log("Data successfully read:", title);
+      document.getElementById("p_fbReadRec").innerText = "Read: " + title;
     } else {
       console.warn("No data found at", READPATH);
       document.getElementById("p_fbReadRec").innerText = "No data at " + READPATH;

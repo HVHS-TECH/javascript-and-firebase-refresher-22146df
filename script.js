@@ -201,19 +201,28 @@ function readPeeps() {
   const READPATH = "userWrite/";
   const DATAREF = ref(gamedb, READPATH);
 
-  get(DATAREF).then((snapshot) => {
+  get(DATAREF)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const fb_data = snapshot.val();
+        console.log("Everyone Wrote", fb_data);
+        let displayData = "";
+        for (const user in fb_data) {
+          if (fb_data[user] && fb_data[user].text) {
+            const title = fb_data[user].text["title"] || fb_data[user].text["title:"];
+            displayData += `${user}: ${title}\n`;
+          }
+        }
 
-    if (snapshot.exists()) {
-      const fb_data = snapshot.val();
-      console.log("Everyone Wrote", fb_data);
-      document.getElementById("p_fbreadAll").innerText = JSON.stringify(fb_data);
+        document.getElementById("p_fbreadAll").innerText = displayData;
 
-    } else {
-      console.warn("No data found at", READPATH);
-      document.getElementById("p_fbreadAll").innerText = "No data found";
-    }
-
-  }).catch((error) => {
-    console.error("Error reading data:", error);
-  });
+      } else {
+        console.warn("No data found at", READPATH);
+        document.getElementById("p_fbreadAll").innerText = "No data found";
+      }
+    })
+    .catch((error) => {
+      console.error("Error reading data:", error);
+    });
 }
+
